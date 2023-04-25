@@ -1,0 +1,28 @@
+#SORT A STACK
+
+
+class GfG{
+	public Stack<Integer> sort(Stack<Integer> s)
+	{
+		//add code here.
+		Stack<Integer> st=new Stack<>();
+		int[] arr=new int[s.size()];
+		int i=0;
+		
+		while(!s.isEmpty())
+		{
+		    arr[i]=s.pop();
+		    i++;
+		}
+	
+		java.util.Arrays.sort(arr);
+	
+		for(int j=0;j<arr.length;j++)
+		{
+		    st.push(arr[j]);
+		   
+		    
+		}
+		return st;
+	}
+}
