@@ -1,0 +1,128 @@
+#POTD
+# QN - > EASY TASK
+
+class node{
+    public : 
+    int st ;
+    int en ;
+    vector<int> count;
+    node *left;
+    node *right;
+    node(){
+        left = NULL;
+        right = NULL;
+        count.resize(26,0);
+    }
+};
+
+class segTree{
+    
+    node *root = new node();
+    string a;
+    
+    node* build(int st,int en){
+        node *ans = new node();
+        ans->st = st;
+        ans->en = en;
+        if(st==en){
+            ans->count[a[st]-'a']++;
+            return ans;
+        }
+        int mid = st+(en-st)/2;
+        ans->left = build(st,mid);
+        ans->right = build(mid+1,en);
+        for(int i=0;i<26;i++) ans->count[i] = ans->left->count[i] + ans->right->count[i];
+        return ans;
+    }
+    
+    void update(node *cur,int in,char ch){
+        if(cur->st==in&&cur->en==in){
+            cur->count[a[in]-'a']--;
+            a[in] = ch;
+            cur->count[a[in]-'a']++;
+            return ;
+        }
+        if(cur->left->st<=in&&cur->left->en>=in){
+            update(cur->left,in,ch);
+        }
+        else{
+            update(cur->right,in,ch);
+        }
+        for(int i=0;i<26;i++) cur->count[i] = cur->left->count[i] + cur->right->count[i];
+        return ;
+    }
+    
+    void query(node *cur,int st,int en,vector<int> &ans){
+        if(cur->st>=st&&cur->en<=en){
+            for(int i=0;i<26;i++) ans[i] += cur->count[i];
+            return ;
+        }
+        if((cur->left->st>=st&&cur->left->st<=en)||(cur->left->en>=st&&cur->left->en<=en)||(st>=cur->left->st&&st<=cur->left->en)||(en>=cur->left->st&&en<=cur->left->en)){
+            query(cur->left,st,en,ans);
+        }
+        if((cur->right->st>=st&&cur->right->st<=en)||(cur->right->en>=st&&cur->right->en<=en)||(st>=cur->right->st&&st<=cur->right->en)||(en>=cur->right->st&&en<=cur->right->en)){
+            query(cur->right,st,en,ans);
+        }
+        return ;
+    }
+    
+    
+    
+public :
+    
+    void buildTree(string &a){
+        int n = a.size();
+        this->a = a;
+        root = build(0,n-1);
+        return ;
+    }
+    
+    void updateTree(int in,char ch){
+        update(root,in,ch);
+        return ;
+    }
+    
+    vector<int> queryTree(int left,int right){
+        vector<int> ans(26,0);
+        query(root,left,right,ans);
+        return ans;
+    }
+    
+};
+
+class Solution{
+public:
+
+    char KthLexographicallyLargest(vector<int> &res,int k){
+        for(int i=25;i>=0;i--){
+            k -= res[i];
+            if(k<=0) return i+'a';
+        }
+        return 'a';
+    }
+    
+    vector<char> easyTask(int n,string a,int q,vector<vector<string>> &qu){
+        int type, in, left, right, k;
+        vector<int> res;
+        vector<char> ans;
+        char ch;
+        segTree tree;
+        tree.buildTree(a);
+        for(int i=0;i<q;i++){
+            type = stoi(qu[i][0]);
+            if(type==1){
+                in = stoi(qu[i][1]);
+                ch = qu[i][2][0];
+                tree.updateTree(in,ch);
+            }
+            else{
+                left = stoi(qu[i][1]);
+                right = stoi(qu[i][2]);
+                k = stoi(qu[i][3]);
+                res = tree.queryTree(left,right);
+                ans.push_back(KthLexographicallyLargest(res,k));
+            }
+        }
+        return ans;
+    }
+};
