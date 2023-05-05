@@ -1,0 +1,23 @@
+class Solution {
+    public String makeGood(String s) {
+        // Use stack to store the visited characters.
+        Stack<Character> stack = new Stack<>();
+        for(char c:s.toCharArray()){
+            /* If the current character make a pair with the last character in the stack,
+             remove both of them. Otherwise, we the add current character to stack.*/
+            if(!stack.isEmpty() && c==(stack.lastElement()^32)){
+                stack.pop();
+            }
+            else
+                stack.add(c);
+            
+        }
+        
+        //Just converting all characters left in stack to string
+        StringBuilder ans = new StringBuilder();
+        for(char c:stack){
+            ans.append(c);
+        }
+        return ans.toString();
+    }
+}
