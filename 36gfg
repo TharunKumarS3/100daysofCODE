@@ -1,0 +1,29 @@
+class Solution{
+    ArrayList<String> CamelCase(int N,String[] Dictionary,String Pattern){
+        //code here
+        ArrayList<String> ans=new ArrayList<>();
+        for(String s:Dictionary){
+            String sortF="";
+            int len=s.length();
+            for(int i=0;i<len;i++){
+                if(Character.isUpperCase(s.charAt(i))){
+                    sortF+=s.charAt(i);
+                }
+            }
+            len=Pattern.length();
+            int len2=sortF.length(),i=0,j=0;
+            while(i<len && j<len2 && Pattern.charAt(i)==sortF.charAt(j)){
+                i++;
+                j++;
+            }
+            if(i==len){
+                ans.add(s);
+            }
+        }
+        Collections.sort(ans);
+        if(ans.size()==0){
+            ans.add("-1");
+        }
+        return ans;
+    }
+}
