@@ -1,0 +1,46 @@
+bool dfs(vector<vector<char>>& board, vector<vector<bool>>& visited, int row, int col, string& word, int index) {
+    int rows = board.size();
+    int cols = board[0].size();
+
+    // Check if current cell is out of bounds or already visited
+    if (row < 0 || row >= rows || col < 0 || col >= cols || visited[row][col])
+        return false;
+
+    // Check if the letter in the current cell matches the letter at the current index in the word
+    if (board[row][col] != word[index])
+        return false;
+
+    // If the current index is the last index in the word, we have found a valid word
+    if (index == word.length() - 1)
+        return true;
+
+    // Mark the current cell as visited
+    visited[row][col] = true;
+
+    // Recursively check neighboring cells
+    bool found = dfs(board, visited, row - 1, col, word, index + 1) or   // Up
+                 dfs(board, visited, row + 1, col, word, index + 1) or   // Down
+                 dfs(board, visited, row, col - 1, word, index + 1) or   // Left
+                 dfs(board, visited, row, col + 1, word, index + 1);     // Right
+
+    // Mark the current cell as unvisited
+    visited[row][col] = false;
+
+    return found;
+}
+    bool isWordExist(vector<vector<char>>& board, string word) {
+         int rows = board.size();
+    int cols = board[0].size();
+
+    vector<vector<bool>> visited(rows, vector<bool>(cols, false));
+
+    // Iterate through each cell in the board
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < cols; col++) {
+            if (dfs(board, visited, row, col, word, 0))
+                return true;
+        }
+    }
+
+    return false;
+    }
